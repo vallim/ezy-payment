@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -65,13 +66,13 @@ public class WebhooksController {
                                     name = "Webhook example",
                                     value = """
                     {
-                      "url": "http://localhost:8080/api-mock/success"
+                      "callback_url": "http://localhost:8080/api-mock/success"
                     }
                     """
                             )
                     )
             )
-            @RequestBody Webhook webhook) {
+            @Valid @RequestBody Webhook webhook) {
         webhookRepository.save(webhook);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -91,6 +92,10 @@ public class WebhooksController {
     )
     @DeleteMapping("/{id}")
     public ResponseEntity deleteById(@PathVariable("id") Long id) {
+        if (!webhookRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
         webhookRepository.deleteById(id);
 
         return ResponseEntity.noContent().build();

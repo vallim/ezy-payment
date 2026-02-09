@@ -19,29 +19,16 @@ public class ApiMockController {
 
     private static final Logger logger = LoggerFactory.getLogger(ApiMockController.class);
 
-    @Operation(
-            summary = "Mock a successful webhook response",
-            description = "Mocks a webhook endpoint that always returns HTTP 200 (OK). " +
-                    "This endpoint logs the received payload and is intended for testing successful webhook deliveries."
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Payload received successfully"
-    )
-    @ApiResponse(
-            responseCode = "400",
-            description = "Invalid request"
-    )
+    @Operation(summary = "Mock a successful webhook response", description = "Mocks a webhook endpoint that always returns HTTP 200 (OK). " + "This endpoint logs the received payload and is intended for testing successful webhook deliveries.")
+    @ApiResponse(responseCode = "200", description = "Payload received successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid request")
     @PostMapping(value = "/success")
     public ResponseEntity success(@RequestBody String body) {
         logger.info("[SUCCESS] mock called for payload {}", body);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @Operation(
-            summary = "Mock a failure response",
-            description = "Mocks a response with HTTP status 400 (Bad Request). This endpoint logs the provided payload and returns a status 400 response. Useful for testing failure scenarios."
-    )
+    @Operation(summary = "Mock a failure response", description = "Mocks a response with HTTP status 400 (Bad Request). This endpoint logs the provided payload and returns a status 400 response. Useful for testing failure scenarios.")
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @PostMapping(value = "/fail")
     public ResponseEntity fail(@RequestBody String body) {

@@ -51,10 +51,10 @@ public class PaymentsController {
                                     name = "Payment example",
                                     value = """
                 {
-                  "firstName": "John",
-                  "lastName": "Doe",
-                  "zipCode": "12345",
-                  "cardNumber": "4111111111111111"
+                  "first_name": "John",
+                  "last_name": "Doe",
+                  "zip_code": "12345",
+                  "card_number": "4111111111111111"
                 }
                 """
                             )
