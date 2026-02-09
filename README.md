@@ -41,7 +41,25 @@ This command will start the following services:
 
 - **Spring Boot Application**: `http://localhost:8080`
 - **RabbitMQ Management UI**: `http://localhost:15672` (default credentials: guest/guest)
-- **Swagger UI**: `http://localhost:8080/swagger-ui.html`
+
+## 📘 API Documentation (OpenAPI)
+
+This project provides a complete OpenAPI 3 specification describing all available APIs,
+including request/response schemas, HTTP status codes, and example payloads.
+
+The OpenAPI specification file is available at the root of the project:
+
+- **`openapi.yaml`**
+
+This file can be used with tools such as:
+- Swagger UI
+- Swagger Editor
+- Postman
+- Insomnia
+
+Additionally, during application runtime, the interactive Swagger UI is available at:
+
+- `http://localhost:8080/swagger-ui.html`
 
 ## Testing APIs
 
