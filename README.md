@@ -61,6 +61,9 @@ Additionally, during application runtime, the interactive Swagger UI is availabl
 
 - `http://localhost:8080/swagger-ui.html`
 
+The `openapi.yaml` file contains real examples for requests and responses,
+ensuring easy understanding and testing of the API behavior.
+
 ## Testing APIs
 
 1. Access Swagger UI: `http://localhost:8080/swagger-ui.html`
