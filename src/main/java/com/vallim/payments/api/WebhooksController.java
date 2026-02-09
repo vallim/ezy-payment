@@ -3,6 +3,10 @@ package com.vallim.payments.api;
 import com.vallim.payments.model.Webhook;
 import com.vallim.payments.repository.WebhookRepository;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/webhooks")
@@ -24,8 +27,17 @@ public class WebhooksController {
         this.webhookRepository = webhookRepository;
     }
 
-    @Operation(summary = "Lists all webhooks")
-    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Lists all registered webhooks",
+            description = "Returns all webhook endpoints registered in the system."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "List of webhooks returned successfully",
+            content = @Content(
+                    schema = @Schema(implementation = Webhook.class)
+            )
+    )
     @GetMapping
     public Iterable<Webhook> findAll() {
         return webhookRepository.findAll();
@@ -33,18 +45,50 @@ public class WebhooksController {
 
     @Operation(
             summary = "Create a new webhook",
-            description = "Creates a new webhook record in the system. This webhook will be notified whenever a new payment is created."
+            description = "Creates a new webhook record. This webhook will be notified whenever a new payment is created."
     )
-    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponse(
+            responseCode = "201",
+            description = "Webhook created successfully"
+    )
+    @ApiResponse(
+            responseCode = "400",
+            description = "Invalid webhook payload"
+    )
     @PostMapping
-    public ResponseEntity save(@RequestBody Webhook webhook) {
+    public ResponseEntity save(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    content = @Content(
+                            schema = @Schema(implementation = Webhook.class),
+                            examples = @ExampleObject(
+                                    name = "Webhook example",
+                                    value = """
+                    {
+                      "url": "http://localhost:8080/api-mock/success"
+                    }
+                    """
+                            )
+                    )
+            )
+            @RequestBody Webhook webhook) {
         webhookRepository.save(webhook);
 
-        return ResponseEntity.status(201).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @Operation(summary = "Removes a webhook")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(
+            summary = "Remove a webhook",
+            description = "Deletes a webhook by its unique identifier."
+    )
+    @ApiResponse(
+            responseCode = "204",
+            description = "Webhook deleted successfully"
+    )
+    @ApiResponse(
+            responseCode = "404",
+            description = "Webhook not found"
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity deleteById(@PathVariable("id") Long id) {
         webhookRepository.deleteById(id);
