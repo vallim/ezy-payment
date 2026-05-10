@@ -31,14 +31,17 @@ public class OutboxEventProcessor {
     @Scheduled(fixedRate = ONE_MINUTE)
     public void processOutboxEvents() {
         PageRequest firstPageRequest = createFirstPage();
-        Page<OutboxEvent> currentPage = repository.findPendingEvents(firstPageRequest);
+        Page<OutboxEvent> currentPage = repository.findPendingEvents(createFirstPage());
 
-        do {
-            currentPage.getContent()
-                    .forEach(this::processEvent);
+        while (true) {
+            currentPage.getContent().forEach(this::processEvent);
+
+            if (!currentPage.hasNext()) {
+                break;
+            }
 
             currentPage = repository.findPendingEvents(currentPage.nextPageable());
-        } while (currentPage.hasNext());
+        }
     }
 
     private void processEvent(OutboxEvent event) {
